@@ -1,0 +1,85 @@
+import json
+import numpy as np 
+
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras.preprocessing.text import Tokenizer, text_to_word_sequence
+
+def inverse_categorical(tokens):
+    ls = []
+    for index, value in enumerate(tokens[-1]):
+        if value == 1:
+            ls.append(index+1)
+    return np.array(ls)
+
+# funcion que retorna una matriz n,m 
+def linear_categorical(tokens, num_classes):
+	 ds=np.zeros((len(tokens), num_classes))
+	 for idx, data in enumerate(tokens):
+	 	for value in data:
+	 		ds[idx][value]=1
+	 return ds
+
+def categorical(tokens, num_classes):
+    ds = np.zeros(num_classes)
+    for data in tokens:
+        ds[data] =1
+    return ds
+# Discretiza la salida de la red neuronal
+def discrete(out):
+	result = np.around(out)
+	result= result.astype('int')
+	return result
+
+# import our chat-bot intents file
+with open('intent.json') as json_data:
+    intents = json.load(json_data)
+
+# Crear el vocabulario a partir de todas las palabras del intents.json
+train_text=""
+p=[]
+t=[]
+for n in intents['intents']:
+	p = p + n['patterns']
+	t = t + [n['tag'] for x in range(len(n['patterns']))]
+	train_text = train_text + " ".join(n['patterns']) + " ".join(n['responses'])
+
+corpus= set(text_to_word_sequence(train_text))
+corpus = list(sorted(corpus))
+tok = Tokenizer()
+tok.fit_on_texts(corpus)
+
+
+
+corpus_size = len(corpus)+1
+
+
+
+clases = list(sorted(set(t)))
+tok2 = Tokenizer()
+tok2.fit_on_texts(clases)
+
+
+clases_size=len(clases)+1
+
+# CREAMOS LA RED NEURONAL CON KERAS
+model = keras.models.load_model('model.h5')
+model.summary()
+data = "hello how are you";
+data = text_to_word_sequence(data)
+secuence = tok.texts_to_sequences(data)
+print(secuence)
+print(len(secuence))
+categorical = categorical(secuence, corpus_size)
+print(categorical)
+print(categorical.shape)
+prediction = discrete(model.predict(np.array([categorical])))
+print(prediction)
+invsec = inverse_categorical(prediction)
+print(invsec)
+intent = tok2.sequences_to_texts(np.array([invsec]))
+print(intent)
+
+
+
+
