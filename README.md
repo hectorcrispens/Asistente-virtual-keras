@@ -6,7 +6,6 @@ Un asistente virtual en python entrenable y customizable.
 
 ![python](https://img.shields.io/badge/python-3.8.10-3776AB?style=flat-square&logo=Python) ![python](https://img.shields.io/badge/pipy-20.0.2-3775A9?style=flat-square&logo=PyPI) ![python](https://img.shields.io/badge/tensorflow-2.6.0-FF6F00?style=flat-square&logo=TensorFlow)
 
-pip 20.0.2
 
 ## Contributor
 
@@ -18,6 +17,7 @@ pip 20.0.2
 
 - [Asistente virtual keras](#asistente-virtual-keras)
   - [Contributor](#contributor)
+  - [Tabla de contenido](#tabla-de-contenido)
   - [Descripción](#descripción)
   - [Arquitectura del proyecto](#arquitectura-del-proyecto)
   - [Workflow](#workflow)
